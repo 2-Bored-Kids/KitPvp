@@ -9,7 +9,6 @@ use cooldogedev\BedrockEconomy\libs\cooldogedev\libSQL\context\ClosureContext;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\math\Vector3;
-use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
 

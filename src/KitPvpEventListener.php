@@ -155,11 +155,13 @@ class KitPvpEventListener implements Listener
         if ($block->getId() == BlockLegacyIds::TNT){
             $spawnPos = $this->plugin->getServer()->getWorldManager()->getDefaultWorld()->getSpawnLocation();
             if ($event->getBlock()->getPosition()->distance($spawnPos) < $this->maxDistanceFromSpawn) {
-                $event->cancel();
+				$event->cancel();
+                return;
             }
             $tnt = new PrimedTNT(new Location($pos->x + 0.5, $pos->y + 0.5, $pos->z + 0.5, $pos->getWorld(), 0, 0));
             $tnt->spawnToAll();
-            $player->getInventory()->setItemInHand($player->getInventory()->getItemInHand()->pop());
+			$stack = $player->getInventory()->getItemInHand();
+            $player->getInventory()->setItemInHand($stack->setCount($stack->getCount() - 1));
             $event->cancel();
         }
         if ($event->getPlayer()->getGamemode() !== GameMode::CREATIVE()) $event->cancel();

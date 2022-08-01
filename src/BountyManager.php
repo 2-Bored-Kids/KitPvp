@@ -13,7 +13,7 @@ class BountyManager {
 	}
 
 	public function registerBounty(string $playername){
-		$query = $this->bountyDB->query("SELECT bounty FROM BOUNTY WHERE name = 'playername'");
+		$query = $this->bountyDB->prepare("SELECT bounty FROM BOUNTY WHERE name = 'playername'");
 		$query->bindValue('playername', $playername);
 
 		if (isset($query->execute()->fetchArray()[0])) {

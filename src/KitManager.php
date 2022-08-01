@@ -30,7 +30,7 @@ class KitManager {
 		$enchantIDs = explode(",", $data[3]);
 		$enchantLevel = explode(",", $data[4]);
 		for ($i = 0; $i < count($enchantIDs); $i++) {
-			if ($enchantLevel[$i] == 0) {
+			if ((int)$enchantLevel[$i] < 1) {
 				//TODO: Hack!
 				continue;
 			}
