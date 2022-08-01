@@ -7,13 +7,11 @@ use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\entity\Location;
 use pocketmine\entity\object\PrimedTNT;
-use pocketmine\entity\projectile\Egg;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\ExplosionPrimeEvent;
-use pocketmine\event\entity\ProjectileHitEvent;
 use pocketmine\event\entity\ProjectileLaunchEvent;
 use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\event\Listener;
@@ -28,8 +26,6 @@ use pocketmine\player\Player;
 use pocketmine\entity\Entity;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
-use pocketmine\utils\TextFormat as TF;
-use pocketmine\world\Explosion;
 use pocketmine\world\particle\BlockBreakParticle;
 
 class KitPvpEventListener implements Listener
@@ -87,24 +83,14 @@ class KitPvpEventListener implements Listener
         if ((int)$player->getHealth() <= $damage) {
             $addition = (int)$this->plugin->bountyManager->getBounty($player->getNameTag()) + 25;
             BedrockEconomyAPI::legacy()->addToPlayerBalance($damager->getNameTag(), $addition);
-            $damager->sendMessage(TF::GREEN . "+". $addition);
+            $damager->sendMessage(TextFormat::GREEN . "+". $addition);
             $this->plugin->bountyManager->addBounty($damager->getNameTag(), 50);
             $this->plugin->getServer()->broadcastMessage(TextFormat::GOLD.$damager->getNameTag()."'s bounty was increased to $". $this->plugin->bountyManager->getBounty($damager->getNameTag()));
         }else{
             BedrockEconomyAPI::legacy()->addToPlayerBalance($damager->getNameTag(), $damage);
-            $damager->sendMessage(TF::GREEN . "+$damage");
+            $damager->sendMessage(TextFormat::GREEN . "+$damage");
         }
 
-    }
-
-    public function onProjectile(ProjectileHitEvent $event)
-    {
-        $entity = $event->getEntity();
-
-        if ($entity instanceof Egg) {
-            $explosion = new Explosion($entity->getPosition(), 1);
-            $explosion->explodeB();
-        }
     }
 
     public function onDeath(PlayerDeathEvent $event)
