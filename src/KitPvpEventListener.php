@@ -160,6 +160,7 @@ class KitPvpEventListener implements Listener
             }
             $tnt = new PrimedTNT(new Location($pos->x + 0.5, $pos->y + 0.5, $pos->z + 0.5, $pos->getWorld(), 0, 0));
             $tnt->spawnToAll();
+            $player->getInventory()->setItemInHand($player->getInventory()->getItemInHand()->pop());
             $event->cancel();
         }
         if ($event->getPlayer()->getGamemode() !== GameMode::CREATIVE()) $event->cancel();
