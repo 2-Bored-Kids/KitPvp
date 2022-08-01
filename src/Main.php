@@ -23,6 +23,7 @@ class Main extends PluginBase
     public function onEnable(): void
     {
 		$this->saveResource("kits.json");
+        $this->saveDefaultConfig();
 
 		$this->kitManager = new KitManager();
 		$this->cfgManager = new ConfigManager($this);
