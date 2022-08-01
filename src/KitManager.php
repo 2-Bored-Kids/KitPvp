@@ -30,6 +30,10 @@ class KitManager {
 		$enchantIDs = explode(",", $data[3]);
 		$enchantLevel = explode(",", $data[4]);
 		for ($i = 0; $i < count($enchantIDs); $i++) {
+			if ($enchantLevel[$i] == 0) {
+				//TODO: Hack!
+				continue;
+			}
 			try {
 				$itemBuilder->addEnchantment(new EnchantmentInstance(EnchantmentIdMap::getInstance()->fromId((int) $enchantIDs[$i]), (int) $enchantLevel[$i]));
 			} catch (\Exception) {
