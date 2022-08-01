@@ -35,25 +35,33 @@ class Main extends PluginBase
         $this->getServer()->getPluginManager()->registerEvents(new KitPvpEventListener($this), $this);
 
         $this->bountyDB = new SQLite3($this->getDataFolder() . 'bounty.db');
-        $this->bountyDB->exec('CREATE TABLE IF NOT EXISTS BOUNTY (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, bounty INTEGER NOT NULL);');
+		$this->bountyDB->exec('CREATE TABLE IF NOT EXISTS BOUNTY (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, bounty INTEGER NOT NULL);');
     }
 
     //BOUNTY:
     public function registerBounty(string $playername){
-        $this->bountyDB->exec("INSERT INTO 'main'.'BOUNTY' ('name', 'bounty') VALUES ('$playername', 0)");
+        $query = $this->bountyDB->prepare("INSERT INTO 'main'.'BOUNTY' ('name', 'bounty') VALUES ('playername', 0)");
+		$query->bindValue('playername', $playername);
+		$query->execute();
     }
 
     public function getBounty(string $playername)
     {
-        return $this->bountyDB->query("SELECT bounty FROM BOUNTY WHERE name = '$playername'")->fetchArray()[0];
+		$query = $this->bountyDB->prepare("SELECT bounty FROM BOUNTY WHERE name = 'playername'");
+		$query->bindValue('playername', $playername);
+        return $query->execute()->fetchArray()[0];
     }
 
     public function setBounty(string $playername, int $bounty){
-        $this->bountyDB->query("UPDATE BOUNTY SET bounty = $bounty WHERE name = '$playername'");
+        $query = $this->bountyDB->prepare("UPDATE BOUNTY SET bounty = $bounty WHERE name = 'playername'");
+		$query->bindValue('playername', $playername);
+		return $query->execute();
     }
 
     public function addBounty(string $playername, int $bounty){
-        $this->bountyDB->query("UPDATE BOUNTY SET bounty = bounty + $bounty WHERE name = '$playername'");
+        $query = $this->bountyDB->prepare("UPDATE BOUNTY SET bounty = bounty + $bounty WHERE name = 'playername'");
+		$query->bindValue('playername', $playername);
+		return $query->execute();
     }
 
 	private function isPlayer(CommandSender $sender) :bool{
