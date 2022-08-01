@@ -1,57 +1,56 @@
 ---
 name: KitPvp
-version: 0.0.1
+version: 3000
 main: Adivius\KitPvp\Main
 api: 4.6.0
 src-namespace-prefix: Adivius\KitPvp
 
 commands:
   spawn:
-    permission: kit
+    permission: kits.kit
     description: "Teleport to spawn"
   clear:
-    permission: utils
-    description: "clear"
+    permission: kits.utils
+    description: "Clears your inventory"
   kit:
-    permission: kit
+    permission: kits.kit
     description: "Choose a kit"
     usage: "/kit"
     aliases:
       - kits
   addkit:
-    permission: kitmanager
+    permission: kits.kitmanager
     description: "Add a kit"
-    usage: "/addkit <kitname> <price>"
   removekit:
-    permission: kitmanager
+    permission: kits.kitmanager
     description: "Remove a kit"
-    usage: "/removekit <kitname>"
-  damage:
-    permission: utils
-    description: "Do damage to you"
-    usage: "/damage <value>"
   updatefromconfig:
-    permission: kitmanager
-    description: sort
+    permission: kits.kitmanager
+    description: "Read kits from the config"
   getbalance:
-    permission: utils
-    description: get balance
+    permission: kits.utils
+    description: "Returns your balance"
   addbounty:
-    permission: bounty
-    description: Add bouty to smb
-    usage: /addbounty <player> <amount>
+    permission: kits.bounty
+    description: "Change a persons bounty"
+    usage: "/addbounty <player> <amount>"
   bounty:
-    permission: bounty
-    description: bounty
-    usage: /bounty <player>
+    permission: kits.bounty
+    description: "See a persons bounty"
+    usage: "/bounty <player>"
+
 permissions:
-  utils:
+  kits.utils:
     default: op
-  kit:
+  kits.kit:
     description: "Permission for kits"
     default: true
-  kitmanager:
+  kits.kit.others:
+      description: "Send others the kit form"
+      default: op
+  kits.kitmanager:
     default: op
-  bounty:
+  kits.bounty:
     default: true
+
 ...

@@ -1,14 +1,11 @@
 {
   "Master": {
-    "name": "Master",
     "price": 10
   },
   "Witch": {
-    "name": "Witch",
     "price": 20
   },
   "Tank": {
-    "name": "Tank",
     "price": "100"
   }
 }

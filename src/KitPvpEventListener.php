@@ -3,6 +3,7 @@
 namespace Adivius\KitPvp;
 
 use cooldogedev\BedrockEconomy\api\BedrockEconomyAPI;
+use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\entity\Location;
 use pocketmine\entity\object\PrimedTNT;
@@ -34,8 +35,8 @@ use pocketmine\world\particle\BlockBreakParticle;
 
 class KitPvpEventListener implements Listener
 {
-    public $plugin;
-    private $radius = 8;
+    public Main $plugin;
+    private int $maxDistanceFromSpawn = 8;
 
     public function __construct(Main $main)
     {
@@ -46,12 +47,12 @@ class KitPvpEventListener implements Listener
     {
         $player = $event->getEntity();
         if (!$player instanceof Player) return;
-        if ($event->getCause() === EntityDamageEvent::CAUSE_FALL) {
+        if ($event->getCause() === EntityDamageEvent::CAUSE_FALL && !$event instanceof EntityDamageByEntityEvent) {
             $event->cancel();
             return;
         }
         $spawnPos = $this->plugin->getServer()->getWorldManager()->getDefaultWorld()->getSpawnLocation();
-        if ($player->getPosition()->distance($spawnPos) < $this->radius) {
+        if ($player->getPosition()->distance($spawnPos) < $this->maxDistanceFromSpawn) {
             $event->cancel();
             return;
         }
@@ -62,14 +63,17 @@ class KitPvpEventListener implements Listener
     public function onHit(EntityDamageByEntityEvent $event)
     {
         $spawnPos = $this->plugin->getServer()->getWorldManager()->getDefaultWorld()->getSpawnLocation();
-        if ($event->getEntity()->getPosition()->distance($spawnPos) < $this->radius) {
+        if ($event->getEntity()->getPosition()->distance($spawnPos) < $this->maxDistanceFromSpawn) {
             return;
         }
-        if (!$event->getEntity() instanceof Player) return;
-        if (!$event->getDamager() instanceof Player) return;
-        if ($event->getEntity() == $event->getDamager()) return;
-        $damager = $event->getDamager();
-        $player = $event->getEntity();
+
+		$damager = $event->getDamager();
+		$player = $event->getEntity();
+
+        if (!$player instanceof Player) return;
+        if (!$damager instanceof Player) return;
+        if ($player === $damager) return;
+
         $damage = (int)$event->getFinalDamage();
         if ($damage <= 0) return;
         if ((int)$player->getHealth() <= $damage) {
@@ -88,16 +92,12 @@ class KitPvpEventListener implements Listener
     public function onProjectile(ProjectileHitEvent $event)
     {
         $entity = $event->getEntity();
-        $owner = $entity->getOwningEntity();
-        if ($entity instanceof EnderPearl)
-            $owner->attack(new EntityDamageEvent($owner, EntityDamageEvent::CAUSE_PROJECTILE, 5));
 
         if ($entity instanceof Egg) {
             $explosion = new Explosion($entity->getPosition(), 1);
             $explosion->explodeB();
         }
     }
-
 
     public function onDeath(PlayerDeathEvent $event)
     {
@@ -106,12 +106,11 @@ class KitPvpEventListener implements Listener
         $event->setXpDropAmount(0);
 
         $pos = $player->getPosition();
-        $light2 = AddActorPacket::create(Entity::nextRuntimeId(), 1, "minecraft:lightning_bolt", $player->getPosition()->asVector3(), null, $player->getLocation()->getYaw(), $player->getLocation()->getPitch(), 0.0, 0.0, [], [], []);
-        $block = $player->getWorld()->getBlock($player->getPosition()->floor()->down());
-        $particle = new BlockBreakParticle($block);
+        $lightning = AddActorPacket::create(Entity::nextRuntimeId(), Entity::nextRuntimeId(), "minecraft:lightning_bolt", $player->getPosition()->asVector3(), null, 0, 0, 0.0, 0.0, [], [], []);
+        $particle = new BlockBreakParticle($player->getWorld()->getBlock($player->getPosition()->floor()->down()));
         $player->getWorld()->addParticle($pos, $particle, $player->getWorld()->getPlayers());
-        $sound2 = PlaySoundPacket::create("ambient.weather.thunder", $pos->getX(), $pos->getY(), $pos->getZ(), 1, 1);
-        Server::getInstance()->broadcastPackets($player->getWorld()->getPlayers(), [$light2, $sound2]);
+        $sound = PlaySoundPacket::create("ambient.weather.thunder", $pos->getX(), $pos->getY(), $pos->getZ(), 1, 1);
+        Server::getInstance()->broadcastPackets($player->getWorld()->getPlayers(), [$lightning, $sound]);
         $this->plugin->setBounty($player->getName(), 0);
     }
 
@@ -139,7 +138,7 @@ class KitPvpEventListener implements Listener
     {
         $sender = $event->getEntity()->getOwningEntity();
         $spawnPos = $this->plugin->getServer()->getWorldManager()->getDefaultWorld()->getSpawnLocation();
-        if ($sender->getPosition()->distance($spawnPos) < $this->radius) {
+        if ($sender->getPosition()->distance($spawnPos) < $this->maxDistanceFromSpawn) {
             $event->cancel();
         }
     }
@@ -151,19 +150,15 @@ class KitPvpEventListener implements Listener
     }
 
     public function onPlace(BlockPlaceEvent $event){
-
-
-
         $block = $event->getBlock();
         $player = $event->getPlayer();
         $pos = $block->getPosition();
-        if ($block->getId() == VanillaBlocks::TNT()->getId()){
+        if ($block->getId() == BlockLegacyIds::TNT){
             $spawnPos = $this->plugin->getServer()->getWorldManager()->getDefaultWorld()->getSpawnLocation();
-            if ($event->getBlock()->getPosition()->distance($spawnPos) < $this->radius) {
+            if ($event->getBlock()->getPosition()->distance($spawnPos) < $this->maxDistanceFromSpawn) {
                 $event->cancel();
             }
-            $player->sendMessage("Tnt");
-            $tnt = new PrimedTNT(new Location($pos->x + 1, $pos->y + 1, $pos->z + 1, $pos->getWorld(), 0, 0));
+            $tnt = new PrimedTNT(new Location($pos->x + 0.5, $pos->y + 0.5, $pos->z + 0.5, $pos->getWorld(), 0, 0));
             $tnt->spawnToAll();
             $event->cancel();
         }
@@ -173,7 +168,7 @@ class KitPvpEventListener implements Listener
     public function onPlayerJoin(PlayerLoginEvent $event)
     {
         $player = $event->getPlayer()->getName();
-        $result = $this->plugin->bountyDB->query("SELECT 1 FROM BOUNTY WHERE name = '$player'");
+        $result = $this->plugin->bountyDB->query("SELECT bounty FROM BOUNTY WHERE name = '$player'");
         if (!isset($result->fetchArray()[0])) {
             $this->plugin->registerBounty($event->getPlayer()->getName());
         }
