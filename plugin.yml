@@ -12,6 +12,10 @@ commands:
   clear:
     permission: kits.utils
     description: "Clears your inventory"
+  rename:
+    permission: kits.utils
+    description: "Renames the item in your hand"
+    usage: "/rename <name>"
   kit:
     permission: kits.kit
     description: "Choose a kit"

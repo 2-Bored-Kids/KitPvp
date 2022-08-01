@@ -35,11 +35,16 @@ use pocketmine\world\particle\BlockBreakParticle;
 class KitPvpEventListener implements Listener
 {
     public Main $plugin;
-    private int $maxDistanceFromSpawn = 8;
+    private int $maxDistanceFromSpawn;
 
     public function __construct(Main $main)
     {
         $this->plugin = $main;
+        $this->maxDistanceFromSpawn = $this->plugin->config->get('spawn-radius');
+    }
+
+    private function isInKitWorld(Entity $entity) : bool {
+        return $entity->getWorld()->getFolderName() == $this->plugin->config->get('kitpvpworld');
     }
 
     public function onDamage(EntityDamageEvent $event)
@@ -61,8 +66,12 @@ class KitPvpEventListener implements Listener
 
     public function onHit(EntityDamageByEntityEvent $event)
     {
-        $spawnPos = $this->plugin->getServer()->getWorldManager()->getDefaultWorld()->getSpawnLocation();
-        if ($event->getEntity()->getPosition()->distance($spawnPos) < $this->maxDistanceFromSpawn) {
+        if (!$this->isInKitWorld($event->getEntity())) {return;}
+
+        $spawnPos = $event->getEntity()->getWorld()->getSpawnLocation();
+        if ($event->getEntity()->getPosition()->distanceSquared($spawnPos) < $this->maxDistanceFromSpawn ** 2
+        || $event->getDamager()->getPosition()->distanceSquared($spawnPos) < $this->maxDistanceFromSpawn ** 2
+        ) {
             return;
         }
 
@@ -100,6 +109,7 @@ class KitPvpEventListener implements Listener
 
     public function onDeath(PlayerDeathEvent $event)
     {
+        if (!$this->isInKitWorld($event->getPlayer())) {return;}
         $player = $event->getPlayer();
         $event->setDrops([]);
         $event->setXpDropAmount(0);
@@ -111,30 +121,36 @@ class KitPvpEventListener implements Listener
         $sound = PlaySoundPacket::create("ambient.weather.thunder", $pos->getX(), $pos->getY(), $pos->getZ(), 1, 1);
         Server::getInstance()->broadcastPackets($player->getWorld()->getPlayers(), [$lightning, $sound]);
         $this->plugin->bountyManager->setBounty($player->getName(), 0);
+        $event->setDeathMessage('');
     }
 
     public function onBreak(BlockBreakEvent $event)
     {
+        if (!$this->isInKitWorld($event->getPlayer())) {return;}
         if ($event->getPlayer()->getGamemode() !== GameMode::CREATIVE()) $event->cancel();
     }
 
     public function onDrop(PlayerDropItemEvent $event)
     {
+        if (!$this->isInKitWorld($event->getPlayer())) {return;}
         if ($event->getPlayer()->getGamemode() !== GameMode::CREATIVE()) $event->cancel();
     }
 
     public function onCraft(CraftItemEvent $event)
     {
+        if (!$this->isInKitWorld($event->getPlayer())) {return;}
         if ($event->getPlayer()->getGamemode() !== GameMode::CREATIVE()) $event->cancel();
     }
 
     public function onBed(PlayerBedEnterEvent $event)
     {
+        if (!$this->isInKitWorld($event->getPlayer())) {return;}
         $event->cancel();
     }
 
     public function onShoot(ProjectileLaunchEvent $event)
     {
+        if (!$this->isInKitWorld($event->getEntity())) {return;}
         $sender = $event->getEntity()->getOwningEntity();
         $spawnPos = $this->plugin->getServer()->getWorldManager()->getDefaultWorld()->getSpawnLocation();
         if ($sender->getPosition()->distance($spawnPos) < $this->maxDistanceFromSpawn) {
@@ -143,12 +159,14 @@ class KitPvpEventListener implements Listener
     }
 
     public function onExplosion(ExplosionPrimeEvent $event){
+        if (!$this->isInKitWorld($event->getEntity())) {return;}
         if($event->getEntity() instanceof PrimedTNT){
             $event->setBlockBreaking(false);
         }
     }
 
     public function onPlace(BlockPlaceEvent $event){
+        if (!$this->isInKitWorld($event->getPlayer())) {return;}
         $block = $event->getBlock();
         $player = $event->getPlayer();
         $pos = $block->getPosition();

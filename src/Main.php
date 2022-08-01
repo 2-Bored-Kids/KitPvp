@@ -10,6 +10,7 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\math\Vector3;
 use pocketmine\plugin\PluginBase;
+use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 
 class Main extends PluginBase
@@ -18,11 +19,13 @@ class Main extends PluginBase
 	public KitManager $kitManager;
 	public FormManager $formManager;
 	public BountyManager $bountyManager;
+    public Config $config;
 
     public function onEnable(): void
     {
 		$this->saveResource("kits.json");
         $this->saveDefaultConfig();
+        $this->config = $this->getConfig();
 
 		$this->kitManager = new KitManager();
 		$this->cfgManager = new ConfigManager($this);
@@ -61,7 +64,7 @@ class Main extends PluginBase
                 break;
             case "spawn":
                 if (!Utils::isPlayer($sender)) return true;
-                $sender->teleport($this->getServer()->getWorldManager()->getDefaultWorld()->getSafeSpawn()->addVector(new Vector3(0.5, 0.5, 0.5)));
+                $sender->teleport($sender->getWorld()->getSafeSpawn()->addVector(new Vector3(0.5, 0.5, 0.5)));
                 $sender->sendMessage(TextFormat::GREEN . "You have been teleported to the spawn!");
                 break;
             case "clear":
@@ -101,8 +104,14 @@ class Main extends PluginBase
 				if (!Utils::isPlayer($sender)) return true;
                 $sender->sendMessage(TextFormat::GOLD. "Your bounty is $".$this->bountyManager->getBounty($sender->getName()));
 				break;
+            case 'rename':
+                if (!Utils::isPlayer($sender)) return true;
+                if (isset($args[0])){
+                    $sender->sendMessage(TextFormat::RED.$command->getUsage());
+                    return true;
+                }
+                $sender->getInventory()->setItemInHand($sender->getInventory()->getItemInHand()->setCustomName(implode(' ', $args)));
         }
         return true;
 	}
 }
-
