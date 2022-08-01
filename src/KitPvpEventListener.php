@@ -8,7 +8,6 @@ use pocketmine\block\VanillaBlocks;
 use pocketmine\entity\Location;
 use pocketmine\entity\object\PrimedTNT;
 use pocketmine\entity\projectile\Egg;
-use pocketmine\entity\projectile\EnderPearl;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -77,11 +76,11 @@ class KitPvpEventListener implements Listener
         $damage = (int)$event->getFinalDamage();
         if ($damage <= 0) return;
         if ((int)$player->getHealth() <= $damage) {
-            $addition = (int)$this->plugin->getBounty($player->getNameTag()) + 25;
+            $addition = (int)$this->plugin->bountyManager->getBounty($player->getNameTag()) + 25;
             BedrockEconomyAPI::legacy()->addToPlayerBalance($damager->getNameTag(), $addition);
             $damager->sendMessage(TF::GREEN . "+". $addition);
-            $this->plugin->addBounty($damager->getNameTag(), 50);
-            $this->plugin->getServer()->broadcastMessage(TextFormat::GOLD.$damager->getNameTag()."'s bounty was increased to $". $this->plugin->getBounty($damager->getNameTag()));
+            $this->plugin->bountyManager->addBounty($damager->getNameTag(), 50);
+            $this->plugin->getServer()->broadcastMessage(TextFormat::GOLD.$damager->getNameTag()."'s bounty was increased to $". $this->plugin->bountyManager->getBounty($damager->getNameTag()));
         }else{
             BedrockEconomyAPI::legacy()->addToPlayerBalance($damager->getNameTag(), $damage);
             $damager->sendMessage(TF::GREEN . "+$damage");
@@ -111,7 +110,7 @@ class KitPvpEventListener implements Listener
         $player->getWorld()->addParticle($pos, $particle, $player->getWorld()->getPlayers());
         $sound = PlaySoundPacket::create("ambient.weather.thunder", $pos->getX(), $pos->getY(), $pos->getZ(), 1, 1);
         Server::getInstance()->broadcastPackets($player->getWorld()->getPlayers(), [$lightning, $sound]);
-        $this->plugin->setBounty($player->getName(), 0);
+        $this->plugin->bountyManager->setBounty($player->getName(), 0);
     }
 
     public function onBreak(BlockBreakEvent $event)
@@ -168,10 +167,6 @@ class KitPvpEventListener implements Listener
 
     public function onPlayerJoin(PlayerLoginEvent $event)
     {
-        $player = $event->getPlayer()->getName();
-        $result = $this->plugin->bountyDB->query("SELECT bounty FROM BOUNTY WHERE name = '$player'");
-        if (!isset($result->fetchArray()[0])) {
-            $this->plugin->registerBounty($event->getPlayer()->getName());
-        }
+		$this->plugin->bountyManager->registerBounty($event->getPlayer()->getName());
     }
 }
