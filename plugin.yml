@@ -1,0 +1,57 @@
+---
+name: KitPvp
+version: 0.0.1
+main: Adivius\KitPvp\Main
+api: 4.6.0
+src-namespace-prefix: Adivius\KitPvp
+
+commands:
+  spawn:
+    permission: kit
+    description: "Teleport to spawn"
+  clear:
+    permission: utils
+    description: "clear"
+  kit:
+    permission: kit
+    description: "Choose a kit"
+    usage: "/kit"
+    aliases:
+      - kits
+  addkit:
+    permission: kitmanager
+    description: "Add a kit"
+    usage: "/addkit <kitname> <price>"
+  removekit:
+    permission: kitmanager
+    description: "Remove a kit"
+    usage: "/removekit <kitname>"
+  damage:
+    permission: utils
+    description: "Do damage to you"
+    usage: "/damage <value>"
+  updatefromconfig:
+    permission: kitmanager
+    description: sort
+  getbalance:
+    permission: utils
+    description: get balance
+  addbounty:
+    permission: bounty
+    description: Add bouty to smb
+    usage: /addbounty <player> <amount>
+  bounty:
+    permission: bounty
+    description: bounty
+    usage: /bounty <player>
+permissions:
+  utils:
+    default: op
+  kit:
+    description: "Permission for kits"
+    default: true
+  kitmanager:
+    default: op
+  bounty:
+    default: true
+...
