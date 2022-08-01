@@ -47,7 +47,7 @@ class Main extends PluginBase
 				}
 
                 $spawnPos = $this->getServer()->getWorldManager()->getDefaultWorld()->getSpawnLocation();
-                if ($sender->getPosition()->distance($spawnPos) > 8) {
+                if ($sender->getPosition()->distance($spawnPos) > $this->config->get('spawn-radius')) {
                     $sender->sendMessage(TextFormat::RED . "You are too far from spawn to do that");
                     return true;
                 }
@@ -62,23 +62,13 @@ class Main extends PluginBase
 				if (!Utils::isPlayer($sender)) return true;
                 $this->formManager->kitRemoveForm($sender, $this->kitManager->getKits());
                 break;
-            case "spawn":
-                if (!Utils::isPlayer($sender)) return true;
-                $sender->teleport($sender->getWorld()->getSafeSpawn()->addVector(new Vector3(0.5, 0.5, 0.5)));
-                $sender->sendMessage(TextFormat::GREEN . "You have been teleported to the spawn!");
-                break;
-            case "clear":
-				if (!Utils::isPlayer($sender)) return true;
-                Utils::clearAllInventories($sender);
-                $sender->sendMessage(TextFormat::GREEN . "Inventory cleared!");
-                break;
-            case 'updatefromconfig':
+            case 'reloadkits':
                 try {
                     $this->cfgManager->readKitsfromConfig();
                     $sender->sendMessage(TextFormat::GREEN . "Kits have been reloaded");
                     break;
                 } catch (\Exception $exception) {
-                    $sender->sendMessage(TextFormat::RED . "Kits couldn`t be reloaded: " . $exception->getMessage());
+                    $sender->sendMessage(TextFormat::RED . "Kits could`t be reloaded: " . $exception->getMessage());
                 }
                 break;
             case 'addbounty':
@@ -104,13 +94,6 @@ class Main extends PluginBase
 				if (!Utils::isPlayer($sender)) return true;
                 $sender->sendMessage(TextFormat::GOLD. "Your bounty is $".$this->bountyManager->getBounty($sender->getName()));
 				break;
-            case 'rename':
-                if (!Utils::isPlayer($sender)) return true;
-                if (isset($args[0])){
-                    $sender->sendMessage(TextFormat::RED.$command->getUsage());
-                    return true;
-                }
-                $sender->getInventory()->setItemInHand($sender->getInventory()->getItemInHand()->setCustomName(implode(' ', $args)));
         }
         return true;
 	}

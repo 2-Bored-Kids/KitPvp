@@ -1,21 +1,14 @@
 ---
 name: KitPvp
-version: 3000
+version: 1.0
 main: Adivius\KitPvp\Main
 api: 4.6.0
 src-namespace-prefix: Adivius\KitPvp
+depend:
+  - FormAPI
+  - BedrockEconomy
 
 commands:
-  spawn:
-    permission: kits.kit
-    description: "Teleport to spawn"
-  clear:
-    permission: kits.utils
-    description: "Clears your inventory"
-  rename:
-    permission: kits.utils
-    description: "Renames the item in your hand"
-    usage: "/rename <name>"
   kit:
     permission: kits.kit
     description: "Choose a kit"
@@ -28,12 +21,9 @@ commands:
   removekit:
     permission: kits.kitmanager
     description: "Remove a kit"
-  updatefromconfig:
+  reloadkits:
     permission: kits.kitmanager
     description: "Read kits from the config"
-  getbalance:
-    permission: kits.utils
-    description: "Returns your balance"
   addbounty:
     permission: kits.bounty
     description: "Change a persons bounty"
@@ -44,17 +34,14 @@ commands:
     usage: "/bounty <player>"
 
 permissions:
-  kits.utils:
-    default: op
   kits.kit:
     description: "Permission for kits"
     default: true
   kits.kit.others:
-      description: "Send others the kit form"
+      description: "Send the kit form to a different player"
       default: op
   kits.kitmanager:
     default: op
   kits.bounty:
     default: true
-
 ...
