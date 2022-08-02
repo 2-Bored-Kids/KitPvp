@@ -1,8 +1,12 @@
---- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/Adivius/KitPvp
+---
 build-by-default: true
 branches:
 - master
 projects:
   KitPvp:
     path: ""
+    icon: "icon.png"
+    libs:
+      - src: Vecnavium/FormsUI/libFormsUI
+        version: ^2.0.0
 ...

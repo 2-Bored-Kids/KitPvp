@@ -1,6 +1,7 @@
 ---
 name: KitPvp
 version: 1.0
+author: Adivius
 main: Adivius\KitPvp\Main
 api: 4.6.0
 src-namespace-prefix: Adivius\KitPvp
