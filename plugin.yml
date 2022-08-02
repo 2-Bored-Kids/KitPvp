@@ -6,7 +6,6 @@ main: Adivius\KitPvp\Main
 api: 4.6.0
 src-namespace-prefix: Adivius\KitPvp
 depend:
-  - FormAPI
   - BedrockEconomy
 
 commands:

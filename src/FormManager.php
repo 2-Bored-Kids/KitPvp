@@ -2,6 +2,10 @@
 
 namespace Adivius\KitPvp;
 
+require __DIR__.'/lib/jojoe77777/FormAPI/CustomForm.php';
+require __DIR__.'/lib/jojoe77777/FormAPI/ModalForm.php';
+require __DIR__.'/lib/jojoe77777/FormAPI/SimpleForm.php';
+
 use cooldogedev\BedrockEconomy\api\BedrockEconomyAPI;
 use cooldogedev\BedrockEconomy\libs\cooldogedev\libSQL\context\ClosureContext;
 use jojoe77777\FormAPI\CustomForm;
