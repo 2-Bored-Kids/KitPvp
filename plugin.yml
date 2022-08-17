@@ -10,38 +10,38 @@ depend:
 
 commands:
   kit:
-    permission: kits.kit
+    permission: kitpvp.kit
     description: "Choose a kit"
     usage: "/kit"
     aliases:
       - kits
   addkit:
-    permission: kits.kitmanager
+    permission: kitpvp.kitmanager
     description: "Add a kit"
   removekit:
-    permission: kits.kitmanager
+    permission: kitpvp.kitmanager
     description: "Remove a kit"
   reloadkits:
-    permission: kits.kitmanager
+    permission: kitpvp.kitmanager
     description: "Read kits from the config"
   addbounty:
-    permission: kits.bounty
+    permission: kitpvp.bounty
     description: "Change a persons bounty"
     usage: "/addbounty <player> <amount>"
   bounty:
-    permission: kits.bounty
+    permission: kitpvp.bounty
     description: "See a persons bounty"
     usage: "/bounty <player>"
 
 permissions:
-  kits.kit:
+  kitpvp.kit:
     description: "Permission for kits"
     default: true
-  kits.kit.others:
+  kitpvp.kit.others:
       description: "Send the kit form to a different player"
       default: op
-  kits.kitmanager:
+  kitpvp.kitmanager:
     default: op
-  kits.bounty:
+  kitpvp.bounty:
     default: true
 ...
