@@ -10,38 +10,38 @@ depend:
 
 commands:
   kit:
-    permission: kitpvp.kit
+    permission: adivius.kitpvp.kit
     description: "Choose a kit"
     usage: "/kit"
     aliases:
       - kits
   addkit:
-    permission: kitpvp.kitmanager
+    permission: adivius.kitpvp.kitmanager
     description: "Add a kit"
   removekit:
-    permission: kitpvp.kitmanager
+    permission: adivius.kitpvp.kitmanager
     description: "Remove a kit"
   reloadkits:
-    permission: kitpvp.kitmanager
+    permission: adivius.kitpvp.kitmanager
     description: "Read kits from the config"
   addbounty:
-    permission: kitpvp.bounty
+    permission: adivius.kitpvp.bounty
     description: "Change a persons bounty"
     usage: "/addbounty <player> <amount>"
   bounty:
-    permission: kitpvp.bounty
+    permission: adivius.kitpvp.bounty
     description: "See a persons bounty"
     usage: "/bounty <player>"
 
 permissions:
-  kitpvp.kit:
+  adivius.kitpvp.kit:
     description: "Permission for kits"
     default: true
-  kitpvp.kit.others:
+  adivius.kitpvp.kit.others:
       description: "Send the kit form to a different player"
       default: op
-  kitpvp.kitmanager:
+  adivius.kitpvp.kitmanager:
     default: op
-  kitpvp.bounty:
+  adivius.kitpvp.bounty:
     default: true
 ...

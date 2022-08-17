@@ -40,7 +40,7 @@ class Main extends PluginBase
     {
         switch ($command->getName()) {
             case "kit":
-				if (!isset($args[0]) && $sender->hasPermission('kit.others')){
+				if (!isset($args[0]) && $sender->hasPermission('adivius.kitpvp.others')){
 					$this->formManager->kitSelectForm($this->getServer()->getPlayerByPrefix($args[0]), $this->kitManager->getKits());
 					return true;
 				}
