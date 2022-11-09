@@ -7,7 +7,7 @@ use pocketmine\inventory\Inventory;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
-use pocketmine\item\VanillaItems;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 
@@ -38,7 +38,7 @@ class KitManager {
 				$itemBuilder->addEnchantment(new EnchantmentInstance(EnchantmentIdMap::getInstance()->fromId((int) $enchantIDs[$i]), (int) $enchantLevel[$i]));
 			} catch (\Exception) {
 				//TODO: There has to be a better way
-				return VanillaItems::AIR();
+				return VanillaBlocks::AIR()->asItem();
 			}
 		}
 		return $itemBuilder;

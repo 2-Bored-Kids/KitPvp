@@ -45,6 +45,8 @@ class Main extends PluginBase
 					return true;
 				}
 
+				if (!Utils::isPlayer($sender)) return true;
+
                 $spawnPos = $this->getServer()->getWorldManager()->getDefaultWorld()->getSpawnLocation();
                 if ($sender->getPosition()->distance($spawnPos) > $this->config->get('spawn-radius')) {
                     $sender->sendMessage(TextFormat::RED . "You are too far from spawn to do that");

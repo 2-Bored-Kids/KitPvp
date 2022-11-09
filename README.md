@@ -20,11 +20,11 @@ which in this case gets higher with every person the player has killed. <br>
 
 ## Commands
 
-| Command     | Description             | Permission         |
-| ----------- |:----------------------: | -----------------: |
-| /kit        | Open the kit menu       | kitpvp.kit         |
-| /addkit     | Add a kit               | kitpvp.kitmanager  |
-| /removekit  | Delete a kit            | kitpvp.kitmanager  |
-| /reloadkits | Reload kits from config | kitpvp.kitmanager  |
-| /addbounty  | Add a bounty to a user  | kitpvp.bounty      |
-| /bounty     | See a players' bounty   | kitpvp.bounty      |
+| Command     | Description             | Permission                 |
+| ----------- |:----------------------: | -------------------------: |
+| /kit        | Open the kit menu       | adivius.kitpvp.kit         |
+| /addkit     | Add a kit               | adivius.kitpvp.kitmanager  |
+| /removekit  | Delete a kit            | adivius.kitpvp.kitmanager  |
+| /reloadkits | Reload kits from config | adivius.kitpvp.kitmanager  |
+| /addbounty  | Add a bounty to a user  | adivius.kitpvp.bounty      |
+| /bounty     | See a players' bounty   | adivius.kitpvp.bounty      |

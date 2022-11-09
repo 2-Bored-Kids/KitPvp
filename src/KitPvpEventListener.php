@@ -101,7 +101,7 @@ class KitPvpEventListener implements Listener
         $event->setXpDropAmount(0);
 
         $pos = $player->getPosition();
-        $lightning = AddActorPacket::create(Entity::nextRuntimeId(), Entity::nextRuntimeId(), "minecraft:lightning_bolt", $player->getPosition()->asVector3(), null, 0, 0, 0.0, 0.0, [], [], []);
+        $lightning = AddActorPacket::create(Entity::nextRuntimeId(), Entity::nextRuntimeId(), "minecraft:lightning_bolt", $player->getPosition()->asVector3(), null, 0, 0, 0.0, 0.0, [], []);
         $particle = new BlockBreakParticle($player->getWorld()->getBlock($player->getPosition()->floor()->down()));
         $player->getWorld()->addParticle($pos, $particle, $player->getWorld()->getPlayers());
         $sound = PlaySoundPacket::create("ambient.weather.thunder", $pos->getX(), $pos->getY(), $pos->getZ(), 1, 1);
